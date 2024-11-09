@@ -1,0 +1,819 @@
+﻿@using CFlow.Models
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    @{
+        if (Session["FirstName"] == null)
+        {
+            Response.Redirect(Url.Action("Login", "Account"));
+        }
+    }
+    <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    font-family: "Poppins", sans-serif;
+                    color: #bebebe;
+                }
+
+                body {
+                    background: #363636;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .top-bar {
+                    height: 60px;
+                    width: 100%;
+                    position: fixed;
+                    display: flex;
+                    justify-content: space-between;
+                    top: 0;
+                    left: 0;
+                    background: #2f2f2f;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 20px;
+                    box-sizing: border-box;
+                }
+
+                .menu {
+                    display: flex;
+                    gap: 10px;
+                }
+
+                .menu-up {
+                    display: none;
+                }
+
+                .menu-down {
+                    display: none;
+                }
+
+                .logo h3 {
+                    color: rgb(172, 0, 0);
+                    font-size: 20px;
+                }
+
+                .search-bar input {
+                    height: 20px;
+                    width: 250px;
+                    padding: 10px;
+                    position: relative;
+                    top: -4px;
+                    background: #3d3d3d;
+                    border: 0px;
+                    border-top-left-radius: 25px;
+                    border-bottom-left-radius: 25px;
+                }
+
+                    .search-bar input:focus {
+                        outline: none;
+                    }
+
+                .search-bar button {
+                    height: 40px;
+                    width: 60px;
+                    position: relative;
+                    background: #3d3d3d;
+                    left: -5px;
+                    border: 0;
+                    border-top-right-radius: 25px;
+                    border-bottom-right-radius: 25px;
+                }
+
+                .top-right {
+                    display: flex;
+                    flex-direction: row;
+                }
+
+                    .top-right #Count {
+                        font-size: 10px;
+                        font-weight: bold;
+                    }
+
+                    .top-right .notification {
+                        margin: 6px 10px 0px 0;
+                    }
+
+                        .top-right .notification span {
+                            height: 30px;
+                        }
+
+                        .top-right .notification #Count {
+                            position: relative;
+                            top: -22px;
+                            left: -5px;
+                            padding: 0px 3px;
+                            border-radius: 4px;
+                            background: red;
+                        }
+
+                    .top-right .profile {
+                        margin: 0 5px;
+                    }
+
+                .left-side-bar, .right-side-bar {
+                    width: 300px;
+                    height: 100vh;
+                    margin-top: 60px;
+                    position: fixed;
+                    background: #414141;
+                    top: 0px
+                }
+
+                .left-side-bar {
+                    left: 0;
+                    width: 250px;
+                }
+
+                    .left-side-bar .side-bar-content {
+                        background: #383838;
+                        height: 100vh;
+                        width: 93%;
+                        margin: 10px;
+                        padding: 10px inherit;
+                        border-radius: 10px;
+                    }
+
+                .side-bar-content form {
+                    display: flex;
+                    flex-direction: column;
+                    margin: 10px;
+                    background: #383838;
+                }
+
+                    .side-bar-content form button {
+                        background: #383838;
+                        margin-top: 10px;
+                        padding: 5px;
+                        border: 0;
+                        border-radius: 10px;
+                        display: flex;
+                    }
+
+                        .side-bar-content form button:hover {
+                            background: rgb(173, 0, 0);
+                        }
+
+                .side-bar-content .material-symbols-outlined {
+                    margin: 5px 0 0 5px;
+                    font-weight: bold;
+                }
+
+                .side-bar-content .text {
+                    margin: 0px 0 0px 10px;
+                    padding: 5px;
+                    font-size: 18px;
+                    font-weight: bolder;
+                    position: relative;
+                    top: -4px;
+                }
+
+                .right-side-bar {
+                    right: 0;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                    .right-side-bar .ask-question button {
+                        padding: 10px;
+                        background: green;
+                        margin-top: 10px;
+                        border: 0;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+
+                        .right-side-bar .ask-question button:hover {
+                            background: rgb(0, 172, 0);
+                        }
+
+                    .right-side-bar .user-last-question, .user-last-comment, .last-question-cflow {
+                        min-height: 100px;
+                        max-height: 200px;
+                        width: 97%;
+                        margin: 10px 0px 5px 10px;
+                        padding: 10px 10px;
+                        overflow-x: hidden;
+                        overflow-y: auto;
+                        background: #383838af;
+                    }
+
+                .date-time {
+                    font-size: 10px;
+                    border: 1px solid #777;
+                    padding: 2px;
+                    border-radius: 3px;
+                }
+
+                .user-last-question p {
+                    font-size: 14px;
+                    color: #ffffff80;
+                    padding: 3px;
+                }
+
+                .user-last-comment p {
+                    font-size: 14px;
+                    color: #ffffff80;
+                    padding: 3px;
+                }
+
+                .last-question-cflow p {
+                    font-size: 14px;
+                    color: #ffffff80;
+                    padding: 3px;
+                }
+
+                .recent-answer-body, .recent-question-body, .all-recent-quenstion-body {
+                    border-top: 1px solid rgb(152, 128, 128);
+                }
+
+                .log-out button {
+                    position: absolute;
+                    top: 615px;
+                    background: rgb(172, 0, 0);
+                    padding: 3px 12px;
+                    border: 0;
+                    border-radius: 5px;
+                }
+
+                    .log-out button:hover {
+                        background: red;
+                    }
+
+                .question-modal {
+                    display: none;
+                    height: 273px;
+                    width: 600px;
+                    background: #3f3f3f;
+                    position: fixed;
+                    top: 89px;
+                    left: 430px;
+                    border-radius: 10px;
+                    border: 1px solid #636363;
+                }
+
+                    .question-modal .modal-close-div span {
+                        position: relative;
+                        left: 576px;
+                        top: -2px;
+                        background: red;
+                        padding: 0px 9px;
+                        border-top-right-radius: 10px;
+                        border-bottom-left-radius: 5px;
+                        cursor: pointer;
+                    }
+
+                #Question-title {
+                    height: 40px;
+                    width: 579px;
+                    margin: 0 1px;
+                    background: rgb(74, 74, 74);
+                    border: 0;
+                    overflow: auto;
+                    padding: 5px 10px;
+                    font-weight: bold;
+                }
+
+                    #Question-description, #Question-title:focus {
+                        outline: 0;
+                    }
+
+                #Question-description {
+                    height: 118px;
+                    width: 579px;
+                    margin: 0 1px;
+                    padding: 5px 10px;
+                    background: rgb(74, 74, 74);
+                    border: 0;
+                    border-top-width: 0px;
+                    border-top-style: none;
+                    border-top-color: currentcolor;
+                    border-top: 1px solid;
+                }
+
+                .question-modal .modal-footer {
+                    width: 600px;
+                    height: 30px;
+                    background: #3f3f3f;
+                    border-bottom-left-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                    position: fixed;
+                    top: 322px;
+                }
+
+                .modal-footer span {
+                    margin: 5px 0 0 10px;
+                    padding: 5px;
+                    color: #00d0d0;
+                    font-weight: bolder;
+                }
+
+                .modal-footer select {
+                    position: relative;
+                    top: -7px;
+                    height: 30px;
+                    width: 100px;
+                    background: rgb(74, 74, 74);
+                    border: 0;
+                    padding: 5px;
+                    border-radius: 3px;
+                }
+
+                .modal-footer input {
+                    position: relative;
+                    top: -8px;
+                    left: 393px;
+                    height: 30px;
+                    width: 50px;
+                    padding: 5px;
+                    background: green;
+                    border: 0;
+                    border-radius: 5px;
+                }
+
+                .modal-footer span {
+                    margin: 5px 0 0 10px;
+                    padding: 5px;
+                    color: #00d0d0;
+                    font-weight: bolder;
+                }
+
+                .tag {
+                    display: inline-block;
+                    background-color: rgb(0, 109, 121);
+                    color: white;
+                    padding: 0px 3px;
+                    border-radius: 4px;
+                    margin: 5px;
+                    cursor: pointer;
+                }
+
+                #toast {
+                    visibility: hidden;
+                    min-width: 250px;
+                    margin-left: -125px;
+                    background-color: #333;
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 5px;
+                    padding: 16px;
+                    position: fixed;
+                    z-index: 1;
+                    left: 50%;
+                    bottom: 30px;
+                    font-size: 17px;
+                }
+
+                    #toast.show {
+                        visibility: visible;
+                        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+                        animation: fadein 0.5s, fadeout 1s 5s;
+                    }
+
+                @@-webkit-keyframes fadein {
+                    from {
+                        bottom: 0;
+                        opacity: 0;
+                    }
+
+                    to {
+                        bottom: 30px;
+                        opacity: 1;
+                    }
+                }
+
+                @@keyframes fadein {
+                    from {
+                        bottom: 0;
+                        opacity: 0;
+                    }
+
+                    to {
+                        bottom: 30px;
+                        opacity: 1;
+                    }
+                }
+
+                /*        @@-webkit-keyframes fadeout {
+                    from {bottom: 30px; opacity: 1;}
+                    to {bottom: 0; opacity: 0;}
+                }
+
+               @@keyframes fadeout {
+                    from {bottom: 30px; opacity: 1;}
+                    to {bottom: 0; opacity: 0;}
+                }
+        */
+                #toast.success {
+                    background-color: #4CAF50;
+                }
+
+                #toast.error {
+                    background-color: #f44336;
+                }
+
+                .main-body {
+                    margin: 75px 310px 0 260px;
+                    padding: 5px;
+                }
+
+                .tags-list {
+                    display: flex;
+                    justify-content: center;
+                    margin: 5px 0 10px 0;
+                }
+
+                    .tags-list span {
+                        margin: 5px 10px;
+                        background: #00656a;
+                        padding: 1px 5px;
+                        border-radius: 3px;
+                        font-size: 14px;
+                        cursor: pointer;
+                    }
+
+                        .tags-list span:hover {
+                            background: #009898;
+                        }
+
+                .main-body .question-show {
+                    margin: 25px 50px;
+                    border-radius: 5px;
+                    border: 1px solid #bdbdbd;
+                    background: #313131;
+                }
+
+                .question-show .top-title {
+                    display: flex;
+                }
+
+                .top-title .vote-section {
+                    height: 90px;
+                    width: 90px;
+                    padding: 5px;
+                    border-top-left-radius: 5px;
+                    border-bottom-left-radius: 5px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 14px;
+                    border-right: 1px solid #bdbdbd;
+                }
+
+                .vote-section p {
+                    margin: 2px;
+                }
+
+                .title-section {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                    margin: 5px 10px;
+                }
+
+                    .title-section button {
+                        width: 100px;
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        color: rgb(0, 150, 0);
+                    }
+
+                        .title-section button:hover {
+                            color: #00fc00
+                        }
+
+                .tags-profile {
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: row;
+                    width: 100%;
+                }
+
+                .added-tags {
+                    margin: 0px 3px 0 0;
+                }
+
+                    .added-tags span {
+                        margin: 0 1px;
+                        background: #00656a;
+                        padding: 1px 5px;
+                        border-radius: 3px;
+                        font-size: 14px;
+                        cursor: pointer;
+                    }
+
+                        .added-tags span:hover {
+                            background: #009898;
+                        }
+
+                .profile-time {
+                    display: flex;
+                }
+
+                .profile-link .time {
+                    margin: 0 50px 0;
+                }
+
+                .profile-link span {
+                    margin-left:20px;
+                    font-size: 14px;
+                    color: rgb(0, 150, 0);
+                    cursor: pointer;
+
+                }
+
+                    .profile-link span:hover {
+                        color: #00fc00;
+                    }
+
+                .time {
+                    margin: 0 20px 0;
+                    border: 1px solid #bdbdbd;
+                    padding: 2px 5px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="menu">
+            <div class="menu-up">
+                <span class="material-symbols-outlined">keyboard_arrow_up</span>
+            </div>
+            <div class="menu-down">
+                <span class="material-symbols-outlined">keyboard_arrow_down</span>
+            </div>
+            <div class="logo">
+                <h3>CFlow</h3>
+            </div>
+
+        </div>
+        <div class="search-bar">
+            <form action="">
+                <input type="text" placeholder="Search here">
+                <button type="submit">
+                    <span class="material-symbols-outlined">
+                        search
+                    </span>
+                </button>
+            </form>
+        </div>
+        <div class="top-right">
+            <div class="notification">
+                <span class="material-symbols-outlined">
+                    notifications
+                </span>
+                <span id="Count">0</span>
+            </div>
+            <div class="profile">
+                <img src="https://thumbs.dreamstime.com/b/user-icon-person-profile-sign-vector-avatar-user-icon-person-profile-sign-vector-avatar-illustration-124240309.jpg" alt="" style="height: 30px; width: 30px; border-radius: 50%;">
+            </div>
+        </div>
+    </div>
+    <div class="left-side-bar">
+        <div class="side-bar-content">
+            <form action="">
+                <button type="submit">
+                    <div class="right-sidebar-button">
+                        <span class="material-symbols-outlined">
+                            home
+                        </span>
+                        <span class="text">Home</span>
+                    </div>
+                </button>
+                <button type="submit">
+                    <div class="right-sidebar-button">
+                        <span class="material-symbols-outlined">
+                            local_fire_department
+                        </span>
+                        <span class="text">New</span>
+                    </div>
+                </button>
+                <button type="submit">
+                    <div class="right-sidebar-button">
+                        <span class="material-symbols-outlined">
+                            trending_up
+                        </span>
+                        <span class="text">Trending</span>
+                    </div>
+                </button>
+                <button type="submit">
+                    <div class="right-sidebar-button">
+                        <span class="material-symbols-outlined">
+                            contact_support
+                        </span>
+                        <span class="text">Questions</span>
+                    </div>
+                </button>
+                <button type="submit">
+                    <div class="right-sidebar-button">
+                        <span class="material-symbols-outlined">
+                            shoppingmode
+                        </span>
+                        <span class="text">Tags</span>
+                    </div>
+                </button>
+
+            </form>
+        </div>
+    </div>
+    <div class="main-body">
+        @RenderBody()
+    </div>
+    <div class="question-modal">
+        <div class="modal-close-div">
+            <span id="close-btn">x</span>
+        </div>
+        @using (Html.BeginForm("InsertQuestion", "Question", FormMethod.Post, new { id = "InsertQuestion" }))
+        {
+            <div class="modal-title-section">
+                <input type="text" name="Title" id="Question-title" placeholder="Question title" required>
+            </div>
+            <div class="modal-QDescription">
+                <textarea name="Description" id="Question-description" placeholder="Description" required></textarea>
+            </div>
+            <div class="modal-Qtag">
+                <div id="tags-container">
+                </div>
+                <input type="text" name="tags" id="Question-tags" readonly required style="display:none">
+            </div>
+            <input type="text" name="UserID" value="@Session["UserID"]" style="display: none">
+            <div class="modal-footer">
+                <span class="material-symbols-outlined">sell</span>
+                <select id="options" onchange="updateTextInput()">
+                    <option value="">Select tag</option>
+                    <option value="C#">C#</option>
+                    <option value=".Net">.Net</option>
+                    <option value="Python">Python</option>
+                </select>
+                <input type="submit" value="Post" name="QSubmit">
+            </div>
+            <script>
+
+                window.onload = function () {
+                    document.getElementById("Question-tags").value = '';
+                    document.getElementById("tags-container").innerHTML = ''; // Clear existing tags
+                };
+
+                function updateTextInput() {
+                    const selectElement = document.getElementById("options");
+                    const selectedValue = selectElement.value; // Get the selected value
+                    const tagsContainer = document.getElementById("tags-container");
+
+                    // Prevent adding empty values or duplicates
+                    if (selectedValue && !Array.from(tagsContainer.children).some(tag => tag.textContent === selectedValue)) {
+                        // Create a new tag element
+                        const tagElement = document.createElement("span");
+                        tagElement.textContent = selectedValue;
+                        tagElement.className = "tag";
+                        tagElement.onclick = function () {
+                            tagsContainer.removeChild(tagElement); // Remove tag on click
+                            updateInputValue(); // Update the input value
+                        };
+                        tagsContainer.appendChild(tagElement); // Add the tag to the container
+                        updateInputValue(); // Update the input value
+                    }
+
+                    // Clear the selection
+                    selectElement.selectedIndex = 0; // Resets to the first option
+                }
+
+                function updateInputValue() {
+                    const tagsContainer = document.getElementById("tags-container");
+                    const tags = Array.from(tagsContainer.children).map(tag => tag.textContent); // Get all tag text
+                    document.getElementById("Question-tags").value = tags.join(' '); // Update input with tags
+                }
+            </script>
+        }
+    </div>
+    <div id="toast"></div>
+    <script>
+
+        // Attach event listener to the form submission event
+        document.getElementById("InsertQuestion").addEventListener("submit", function (event) {
+
+            let isValid = true;
+
+            // Get the value of the tags input (which is populated dynamically)
+            let tags = document.getElementById("Question-tags").value.trim();
+
+            // Check if the tags input is empty
+            if (tags === "") {
+                isValid = false;
+            }
+
+            // Prevent the form from being submitted if validation fails
+            if (!isValid) {
+                event.preventDefault();  // Stop form submission
+
+                showToast('error', 'Please add at least one tag')
+
+                function showToast(type, message) {
+                    const toast = document.getElementById("toast");
+                    toast.className = type;
+                    toast.innerHTML = message;
+                    toast.classList.add("show");
+                    setTimeout(function () {
+                        toast.classList.remove("show");
+                    }, 4000);
+                }
+            }
+
+        });
+
+
+
+
+        if ("@Session["InertQuestionValidation"]" == "False")
+            {
+                showToast('error', 'Please add at least one tag')
+            }
+
+        if ("@Session["InertQuestionValidation"]" == "True")
+                showToast('success', 'Posted successfully!')
+
+            function showToast(type, message) {
+                const toast = document.getElementById("toast");
+                toast.className = type;
+                toast.innerHTML = message;
+                toast.classList.add("show");
+                setTimeout(function () {
+                    toast.classList.remove("show");
+                }, 4000);
+            }
+            @{
+                Session.Remove("InertQuestionValidation");
+            }
+    </script>
+    <div class="right-side-bar">
+        <!-- Right sidebar content -->
+        <div class="ask-question">
+            <button id="Create-post">Create your Question</button>
+        </div>
+        <div class="user-last-question">
+            <p>Yours recent questions</p>
+            <div class="recent-question-body">
+                <div class="recent-question">
+                    <span>This is your last Question. This is your last Question</span>
+                </div>
+                <div>
+                    <span class="date-time">12:30 am</span>
+                </div>
+            </div>
+
+        </div>
+        <!-- <div class="user-last-comment">
+            <p>Yours recent answer<p>
+            <div class="recent-answer-body">
+                <div class="recent-ans">
+                    <span>This is your last Answer</span>
+                </div>
+                <div class="date-time">
+                    <span>12:30 am</span>
+                </div>
+            </div>
+        </div> -->
+        <div class="last-question-cflow">
+            <p>Recent Questions</p>
+            <div class="all-recent-quenstion-body">
+                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+            </div>
+            <div>
+                <span class="date-time">12:30 am</span>
+            </div>
+        </div>
+        <div class="log-out">
+            @using (Html.BeginForm("LogOut", "Account", FormMethod.Post))
+            {
+                <button type="submit" style="padding: 3px 5px; font-weight: bold;" name="LogOut" value="LogOut">Logout</button>
+            }
+        </div>
+    </div>
+    <script>
+        const createPost = document.querySelector("#Create-post");
+        const closebtn = document.querySelector("#close-btn");
+        const questionModal = document.querySelector(".question-modal");
+
+        createPost.addEventListener("click", function () {
+            questionModal.style.display = "block"; // Show the modal when the button is clicked
+        });
+
+        closebtn.addEventListener("click", function () {
+            questionModal.style.display = "none"; // Hide the modal when the close button is clicked
+        });
+
+    </script>
+</body>
+</html>
+

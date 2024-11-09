@@ -1,0 +1,323 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignIn page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        input:focus {
+            outline: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            top: 150px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 320px;
+            width: 350px;
+            border-radius: 15px;
+            background-color: #1e1a36;
+            box-shadow: 5px 5px 40px 15px rgb(177, 176, 176);
+            transition: .25s;
+        }
+
+            .container:hover {
+                box-shadow: 5px 5px 40px 20px rgb(149, 148, 148);
+                background-color: #292039;
+            }
+
+        .login {
+            display: flex;
+            /* display: none; */
+            padding: 5px;
+            height: 80%;
+            background-color: white;
+            border-top-left-radius: 13px;
+            border-top-right-radius: 13px;
+            border-bottom-left-radius: 20%;
+            border-bottom-right-radius: 20%;
+        }
+
+        .form {
+            margin-top: 35px;
+            font-size: 18px;
+        }
+
+            .form input {
+                margin: 10px;
+                padding: 5px;
+                height: 25px;
+                width: 80%;
+                border: 1px solid rgb(135, 134, 134);
+                border-radius: 3px;
+            }
+
+            .form #loginSubmit {
+                margin-top: 10px;
+                margin-bottom: 30px;
+                width: 40%;
+                height: 40px;
+                padding: 5px;
+                background-color: #6d44b8;
+                color: white;
+                font-weight: bold;
+                font-size: 16px;
+                border: 0 solid;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+        #SignUpSubmit {
+            margin: 15px 0 30px 0;
+            width: 40%;
+            height: 40px;
+            padding: 5px;
+            background-color: #6d44b8;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border: 0 solid;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sign-in {
+            /* display: flex; */
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            background-color: #ffffff;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+        }
+
+        .sign-in-username {
+            display: flex;
+            flex-direction: row;
+            padding: 0 10px 0 10px;
+            margin-top:20px;
+        }
+
+            .sign-in-username #signinFirstName {
+                width: 60%;
+                margin: 2px;
+            }
+
+            .sign-in-username #signinLastName {
+                width: 40%;
+                margin: 2px;
+            }
+
+        .sign-in-password {
+            display: flex;
+            flex-direction: row;
+            padding: 0 10px 0 10px;
+        }
+        .sign-in input {
+            margin: 10px;
+            padding: 5px;
+            height: 25px;
+            width: 80%;
+            border: 1px solid rgb(135, 134, 134);
+            border-radius: 3px;
+        }
+
+        .sign-in-password input {
+            margin: 10px 2px;
+        }
+
+        #signinEmain {
+            margin: 2px 0px;
+        }
+
+        #login-button {
+            display: none;
+            /* display: flex; */
+            justify-content: center;
+            width: 30%;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 0;
+            cursor: pointer;
+        }
+
+        #signin-button {
+            /* display: none;  */
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            width: 30%;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 0;
+            cursor: pointer;
+        }
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @@-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @@keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+/*        @@-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
+       @@keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+*/
+        #toast.success {
+            background-color: #4CAF50;
+        }
+
+        #toast.error {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="login-button">Log in</button>
+        <div class="login">
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+            {
+                <div class="form">
+                    <input type="text" id="userName" name="Email" class="Email" placeholder="Last Name or Email">
+                    <input type="password" id="Password" name="Password" class="Password" placeholder="Password"><br />
+                    <input type="submit" value="Log in" id="loginSubmit">
+                </div>
+            }
+        </div>
+        <div class="sign-in">
+            @using (Html.BeginForm("CreateAccount", "Account", FormMethod.Post))
+            {
+                <div calss="form">
+                    <div class="sign-in-username">
+                        <input type="text" id="signinFirstName" name="FirstName" class="text" placeholder="First Name">
+                        <input type="text" id="signinLastName" name="LastName" class="text" placeholder="Last Name">
+                    </div>
+                    <div class="sign-in-password">
+                        <input type="Password" id="signinPassword" name="Password" class="text" placeholder="Password">
+                        <input type="Password" id="signinConfurnPassword" name="ConPassword" class="text" placeholder="Confurm Password">
+                    </div>
+                    <input type="text" id="signinEmain" name="Email" class="text" placeholder="Email">
+                    <input type="submit" value="Sign up" id="SignUpSubmit">
+                </div>
+            }
+        </div>
+        <button id="signin-button">sign in</button>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+        var SignInSuccess = "@Session["SignInSuccess"]";
+        var Confurmation = "@Session["Valid"]";
+
+        if (Confurmation == "Fasle")
+        {
+            showToast('error', 'Invalid username or password')
+        }
+
+        if (SignInSuccess == "True")
+            showToast('success', 'Signed in successfully!')
+        else if (SignInSuccess == "False")
+            showToast('error', 'Invalid input or this mail already used')
+        function showToast(type, message) {
+            const toast = document.getElementById("toast");
+            toast.className = type;
+            toast.innerHTML = message;
+            toast.classList.add("show");
+            setTimeout(function () {
+                toast.classList.remove("show");
+            }, 4000);
+        }
+        @{
+            Session.Remove("SignInSuccess");
+        }
+
+
+        if (Confurmation == "Fasle")
+        {
+            document.querySelector('.Email').style.border = "1px solid red";
+            document.querySelector('.Password').style.border = "1px solid red";
+        }
+        @{
+            Session.Remove("Valid");
+        }
+
+        const loginbtn = document.querySelector('#login-button')
+        const signinbtn = document.querySelector('#signin-button')
+        const logindiv = document.querySelector('.login')
+        const signindiv = document.querySelector('.sign-in')
+        loginbtn.addEventListener('click', () => {
+            logindiv.style.display = 'flex';
+            loginbtn.style.display = 'none';
+            signinbtn.style.display = 'flex';
+            signindiv.style.display = 'none';
+        });
+        signinbtn.addEventListener('click', () => {
+            signindiv.style.display = 'flex';
+            signinbtn.style.display = 'none';
+            logindiv.style.display = 'none';
+            loginbtn.style.display = 'flex';
+        })
+    </script>
+</body>
+
+</html>
+

@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+}
+@using CFlow.Models;
+<div class="popular-tag">
+    <h2>Popular tags</h2>
+    <div class="tags-list">
+        <span>tag-1</span>
+        <span>tag-2</span>
+        <span>tag3</span>
+    </div>
+</div>
+
+@{
+    List<Questions> question = Questions.QuestionLists();
+
+    foreach (Questions obj in question)
+    {
+        <div class="question-show"> 
+            <div class="top-title">
+                <div class="vote-section">
+                    <p>@obj.TotalViews views</p>
+                    <p>0 tatal vote</p>
+                    <p>@obj.TotalAnswer Answer</p>
+                </div>
+                <div class="title-section">
+                    <h3>@obj.QTitle</h3>
+                    <div class="tags-profile">
+                        @{
+                            List<Tag> tags = Tag.TagsList(@obj.QID);
+                            foreach (Tag tag in tags)
+                            {
+                                <div class="added-tags">
+                                    <span>@tag.tag</span>
+
+                                </div>
+                            }
+                        }
+
+                        <div class="profile-time">
+                            <div class="profile-link">
+                                <span>@obj.UserName</span>
+                            </div>
+                            <div>
+                                <span class="date-time" style="margin: 0 10px">@obj.DateTime</span>
+                            </div>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("ViewQuestion", "Question", FormMethod.Post))
+                    {
+                        <input type="text" value="@obj.QID" name="Qid" style="display:none">
+                        <button type="submit">View question</button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+}
+
